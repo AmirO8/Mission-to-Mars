@@ -18,7 +18,9 @@ def scrape_all():
         "news_paragraph": news_paragraph,
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
-        "last_modified": dt.datetime.now()
+        "last_modified": dt.datetime.now(),
+        "url_images": hemisphere_image_urls()
+        
     }
     # Stop webdriver and return data
     browser.quit()
@@ -81,6 +83,12 @@ def mars_facts():
 
     # Convert dataframe into HTML format, add bootstrap
     return df.to_html(classes="table table-striped")
+
+def hemisphere_image_urls():
+    try:
+        links = browser.find_by_css("a.product-item h3")
+    except BaseException:
+        return links
 
 if __name__ == "__main__":
 
