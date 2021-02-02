@@ -23,6 +23,7 @@ def scrape_all():
         
     }
     # Stop webdriver and return data
+    #print(data["url_images"])
     browser.quit()
     return data
 
@@ -87,20 +88,32 @@ def mars_facts():
 def hemisphere_image(browser):
     
     try:
-    #Browser to visit the URL 
-    url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
-    browser.visit(url)
+    #Browser to visit the URL
+        url = 'https://web.archive.org/web/20181114171728/https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
+        browser.visit(url)
     #parsing
-    html = browser.html
-    html_soup = soup(html, 'html.parser')
-    hemisphere_image_urls = [] 
-    
+        html = browser.html
+        html = soup(html, 'html.parser')
+        #hemisphere_image_urls = []
+
+        links = browser.find_by_css("a.product-item h3") 
+        test={}
+        #print(len(links))
         for i in range(len(links)):
+            hemisphere = {}
             browser.find_by_css("a.product-item h3")[i].click()
             sample_elem = browser.links.find_by_text('Sample')[0]
-            hemisphere = {“img_url”: link, “title”:title}
-            hemisphere_image_urls.append(hemisphere)
-        return hemisphere_image_urls
+            #hemisphere['img_url'] = sample_elem['href']
+            #hemisphere['title'] = browser.find_by_css("h2.title").text
+            #print("this is the browser text" + browser.find_by_css("h2.title").text)
+            #print(sample_elem["href"])
+            test[browser.find_by_css("h2.title").text] = sample_elem["href"]
+            #hemisphere_image_urls.append(hemisphere)
+            #print("this is test" + test)
+        #print("this is the dictonary" + test)
+            browser.back()
+        return test
+
     except BaseException:
         return None
         #return "There was an error"
